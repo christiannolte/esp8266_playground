@@ -152,7 +152,7 @@ void loop() {
     Serial.print(get_humidity());
     Serial.println(" %");
 #ifdef DO_ADAFRUIT_PUBLISHING
-    if(loopcount++>=CNT)
+    if(++loopcount>=CNT)
     {
       loopcount=0;
       Serial.println("Publishing Values to Adafruit IO");
