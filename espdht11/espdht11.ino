@@ -22,8 +22,15 @@
 #include "Adafruit_MQTT_Client.h"
 #include "Adafruit_IO_Client.h"
 #endif
+
+#ifdef DO_USE_THINGSSPEAK
+#include <ESP8266HTTPClient.h>
+#endif
+
 #include "DHT.h"
 #include "defines.h"
+
+
 
 #define CNT 15
 int temperaturen[CNT];
