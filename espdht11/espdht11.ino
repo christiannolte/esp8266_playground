@@ -13,7 +13,7 @@
  ****************************************************/
 
 //#define DO_ADAFRUIT_PUBLISHING
-#define DO_USE_THINGSSPEAK
+#define DO_USE_THINGSPEAK
 
 // Libraries
 #include <ESP8266WiFi.h>
@@ -23,7 +23,7 @@
 #include "Adafruit_IO_Client.h"
 #endif
 
-#ifdef DO_USE_THINGSSPEAK
+#ifdef DO_USE_THINGSPEAK
 #include <ESP8266HTTPClient.h>
 #endif
 
@@ -60,8 +60,8 @@ void setup() {
   Serial.begin(115200);
   Serial.println("");
   Serial.println(F("Christians Klimalogger"));
-#ifdef DO_USE_THINGSSPEAK
-  Serial.println(F("Thingsspeak Publishing"));
+#ifdef DO_USE_THINGSPEAK
+  Serial.println(F("Thingspeak Publishing"));
 #endif
   
   // Connect to WiFi network
@@ -178,8 +178,8 @@ void loop() {
           Serial.println(F("*** Error writing value to FeuchteFeed!"));
       }
 #endif    
-#ifdef DO_USE_THINGSSPEAK
-      Serial.println("Publishing Values to Thingsspeak");
+#ifdef DO_USE_THINGSPEAK
+      Serial.println("Publishing Values to ThingSpeak");
       HTTPClient http;
       String myrequest = "/update?api_key=" ;
       myrequest+= THINGSSPEAK_KEY;
