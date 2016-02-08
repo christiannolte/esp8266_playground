@@ -57,8 +57,15 @@ int initcount=0;
 
 ESP8266WebServer server(80);
 
-void handleRoot() {
-  server.send(200, "text/html", "<h1>This will be the configuration page</h1>");
+void handleMainPage() {
+  server.send(200, "text/html", "<h1>This will be the configuration page "
+                                "hier gehts zut doit seite "
+                                "<li><a href=\"/doit\" >doit</a></li>"
+                                "</h1>");
+}
+
+void handleDoitPage() {
+  server.send(200, "text/html", "<h1>This is the doit page</h1>");
 }
 
 
@@ -89,7 +96,8 @@ void setup() {
       IPAddress myIP = WiFi.softAPIP();
       Serial.print("AP IP address: ");
       Serial.println(myIP);
-      server.on("/", handleRoot);
+      server.on("/", handleMainPage);
+      server.on("/doit", handleDoitPage);
       server.begin();
       Serial.println("HTTP server started");
     }
