@@ -63,7 +63,7 @@ void setup() {
 #ifdef DO_USE_THINGSPEAK
   Serial.println(F("Thingspeak Publishing"));
 #endif
-  
+  WiFi.mode(WIFI_STA); // Set to Station mode
   // Connect to WiFi network
   WiFi.begin(ssid, password);
   Serial.print("\n\r \n\rWorking to connect");
