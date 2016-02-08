@@ -28,6 +28,9 @@ int initcount=0;
 ESP8266WebServer server(80);
 
 void handleMainPage() {
+  int temperature_data = (int)dht.readTemperature();
+  int humidity_data = (int)dht.readHumidity();
+
   server.send(200, "text/html", "<h1>This will be the configuration page "
                                 "hier gehts zut doit seite "
                                 "<li><a href=\"/doit\">doit</a></li>"
