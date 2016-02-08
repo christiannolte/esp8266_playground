@@ -17,6 +17,8 @@
 
 // Libraries
 #include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+
 #ifdef DO_ADAFRUIT_PUBLISHING
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
@@ -53,6 +55,14 @@ Adafruit_IO_Feed humidityFeed = aio.getFeed("Luftfeuchtigkeit");
 int loopcount=0;
 int initcount=0;
 
+ESP8266WebServer server(80);
+
+void handleRoot() {
+  server.send(200, "text/html", "<h1>This will be the configuration page</h1>");
+}
+
+
+
 /*************************** Sketch Code ************************************/
 void setup() {
   // Init sensor
@@ -79,6 +89,9 @@ void setup() {
       IPAddress myIP = WiFi.softAPIP();
       Serial.print("AP IP address: ");
       Serial.println(myIP);
+      server.on("/", handleRoot);
+      server.begin();
+      Serial.println("HTTP server started");
     }
   }
   Serial.print("Connected to ");
