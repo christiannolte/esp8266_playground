@@ -51,6 +51,7 @@ Adafruit_IO_Feed humidityFeed = aio.getFeed("Luftfeuchtigkeit");
 #endif
 
 int loopcount=0;
+int initcount=0;
 
 /*************************** Sketch Code ************************************/
 void setup() {
@@ -72,6 +73,13 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    if(initcount++>120){
+      //One Minute not connected via wifi, now switching to Accesspoint Mode for configuration
+      WiFi.softAP("DHT11 datalogger","");
+      IPAddress myIP = WiFi.softAPIP();
+      Serial.print("AP IP address: ");
+      Serial.println(myIP);
+    }
   }
   Serial.print("Connected to ");
   Serial.println(ssid);
