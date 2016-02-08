@@ -12,7 +12,8 @@
   MIT license, all text above must be included in any redistribution
  ****************************************************/
 
-#define DO_ADAFRUIT_PUBLISHING
+//#define DO_ADAFRUIT_PUBLISHING
+#define DO_USE_THINGSPEAK
 
 // Libraries
 #include <ESP8266WiFi.h>
@@ -21,10 +22,17 @@
 #include "Adafruit_MQTT_Client.h"
 #include "Adafruit_IO_Client.h"
 #endif
+
+#ifdef DO_USE_THINGSPEAK
+#include <ESP8266HTTPClient.h>
+#endif
+
 #include "DHT.h"
 #include "defines.h"
 
-#define CNT 15
+
+
+#define CNT 1
 int temperaturen[CNT];
 int feuchten[CNT];
 int i=0;
@@ -52,7 +60,10 @@ void setup() {
   Serial.begin(115200);
   Serial.println("");
   Serial.println(F("Christians Klimalogger"));
-  
+#ifdef DO_USE_THINGSPEAK
+  Serial.println(F("Thingspeak Publishing"));
+#endif
+  WiFi.mode(WIFI_STA); // Set to Station mode
   // Connect to WiFi network
   WiFi.begin(ssid, password);
   Serial.print("\n\r \n\rWorking to connect");
@@ -151,11 +162,11 @@ void loop() {
     Serial.print("Luftfeuchte(gemittelt)   : ");
     Serial.print(get_humidity());
     Serial.println(" %");
-#ifdef DO_ADAFRUIT_PUBLISHING
     if(++loopcount>=CNT)
     {
       loopcount=0;
-      Serial.println("Publishing Values to Adafruit IO");
+#ifdef DO_ADAFRUIT_PUBLISHING
+      Serial.println("Publishing Values to Adafruit.io");
       Serial.print("First the temperature ");
       if (!temperatureFeed.send(get_temperature())) 
       {
@@ -167,6 +178,36 @@ void loop() {
           Serial.println(F("*** Error writing value to FeuchteFeed!"));
       }
 #endif    
+#ifdef DO_USE_THINGSPEAK
+      Serial.println("Publishing Values to ThingSpeak");
+      HTTPClient http;
+      String myrequest = "/update?api_key=" ;
+      myrequest+= THINGSSPEAK_KEY;
+      myrequest+= "&field1=";
+      myrequest+= get_temperature();
+      myrequest+= "&field2=";
+      myrequest+= get_humidity();
+      Serial.println(myrequest);
+      Serial.print("[HTTP] begin...\n");
+      // configure traged server and url
+      http.begin("api.thingspeak.com", 80, myrequest); //HTTP
+
+      Serial.print("[HTTP] GET...\n");
+      // start connection and send HTTP header
+      int httpCode = http.GET();
+      if(httpCode) {
+            // HTTP header has been send and Server response header has been handled
+            Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+
+            // file found at server
+            if(httpCode == 200) {
+                String payload = http.getString();
+                Serial.println(payload);
+            }
+        } else {
+            Serial.print("[HTTP] GET... failed, no connection or no HTTP server\n");
+        }
+#endif
     }
   }
   delay(60000);
