@@ -32,7 +32,7 @@
 
 
 
-#define CNT 15
+#define CNT 1
 int temperaturen[CNT];
 int feuchten[CNT];
 int i=0;
